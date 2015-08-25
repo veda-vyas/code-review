@@ -146,26 +146,40 @@
    <script type="text/javascript">
       var all_lines = $("code").text().split("\n");
       var code = "";
-
+      count = 0;
       //iterates through each line
       $.each(all_lines, function(i, line) {
-         code = code+'<span style="float:left"id="'+i+'">'+line+'</span>&nbsp;&nbsp;<span style="background-color:white; border-radius:5px; color:red;" id="err'+i+'"></span><br>';
+         code = code+'<span style="float:left"id="'+i+'">'+line+'</span>&nbsp;&nbsp;<button style="color:black; border-radius:15px; font-size:10px" class="hide" value="0" id="btn'+i+'"></button>&nbsp;&nbsp;<span style="background-color:white; border-radius:5px; color:red;" id="err'+i+'" class="hide"></span><br>';
          var error = "";
 
          //Event handler for triple click
          window.addEventListener('click', function (clicks) {
             if (clicks.detail === 3) {
                if (window.getSelection() == line){
-
+                  
                   //Highlighting the line and showing prompt window
                   error = prompt("Line No : "+i, error);
                   if(error != null && error != "null" && error != ""){
-                    $("#"+i).addClass("error");
                     $("#err"+i).html('&nbsp;&nbsp;'+error+'&nbsp;&nbsp;');
+                    $("#btn"+i).removeClass("hide");
+                    
+                    //Checking if the error is already marked or not
+                    if($("#btn"+i).val() == 0){
+                      count++;
+                      $("#btn"+i).html(count);
+                      $("#btn"+i).attr("value",count);
+
+                      //Showing the error on screen
+                      $("#btn"+i).click(function(){
+                        $("#err"+i).toggleClass("hide");
+                      });
+                    }
                   }
+
+                  //this executes and deletes the saved entries when blank arguments are passed into the prompt or if there is a click on cancel button
                   else{
-                    $("#"+i).removeClass("error");
                     $("#err"+i).html("");
+                    $("#btn"+i).addClass("hide");
                   }
                }
             }
