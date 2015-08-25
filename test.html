@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en">
+   <head>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+      <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+      <link rel="stylesheet" href="sunburst.css">
+      <script src="highlight.pack.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+   </head>
+   <style type="text/css">
+   .error {
+      background-color: maroon;
+   }
+   </style>
+   <body>
+     <pre>
+         <code style="background-color:#1F1A1A">
+          public class ToDoList {
+            private String name;
+            private Date date = new Date();
+            private Task[] task = new Task[50];
+            private Date[] dask = new Date[50];
+            private Task[] findTasks = new Task[50];
+            private Task[] overDueTasks = new Task[50];
+            private Task[] getTask = new Task[50];
+            private Task[] pendingTasks = new Task[50];
+            private int count = 0;
+            private int or = 0;
+            private int gr = 0;
+            private int pr = 0;
+            public ToDoList(String nameOfPerson) {
+              name = nameOfPerson;
+            }
+            public String getName() {
+              return name;
+            }
+            public void addTask(Task obj) {
+              task[count] = obj;
+              count++;
+            }
+          /**
+          * Printing all the tasks. 
+          */  
+            public void printAllTasks() {
+              for (int jr = 0; jr < count; jr ++) {
+                if (task[jr] != null) {
+                  System.out.println(task[jr].combine());
+                }
+              }
+            } 
+          /**
+          * Getting the tasks with the given string.
+          */  
+            public Task[] findTask(String str) {
+              for (int jr = 0; ((jr < task.length) && (task[jr] != null)); jr ++) {
+                boolean val = task[jr].nameReturn().contains(str);
+                if (val) {
+                  int fr = 0;
+                  findTasks[fr] = task[jr];
+                  fr++;
+                }
+              }
+              return findTasks;
+            }
+          /**
+          * Getting the tasks which are not done.
+          */  
+            public Task[] getOverdueTasks() {
+              Date d1 = new Date();
+              SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm:ss"); 
+              try {
+                for (int jr = 0; jr < count; jr ++) {
+                  Date d2 = formatter.parse(task[jr].dueDateReturn());
+                  if ((d1.after(d2)) && (d1.compareTo(d2) != 0) 
+                       && ((task[jr].markAsDoneReturn()).equals("not done"))) {
+                    overDueTasks[or] = task[jr];
+                    or++;
+                  }
+                }
+              } catch (ParseException e) {
+                e.printStackTrace();
+              }
+              return overDueTasks;
+            }
+          /**
+          * getting the task with the string.
+          */  
+            public Task[] getTask(String dateInString) {     
+              SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+              try {
+                Date date = formatter.parse(dateInString);
+                for (int jr = 0; jr < count; jr++) {
+                  Date d2 = formatter.parse(task[jr].dueDateReturn());
+                  if ((date.compareTo(d2) == 0)) {
+                    getTask[gr] = task[jr];
+                    gr++;
+                  }
+                }
+              } catch (ParseException e) {
+                e.printStackTrace();
+              }
+              return getTask;
+            }
+          /**
+          * getting the list of tasks which are pending.
+          */  
+            public Task[] getPendingTasks() {
+              Date d1 = new Date();
+              SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+              try {
+                for (int jr = 0; jr < count; jr ++) {
+                  Date d2 = formatter.parse(task[jr].dueDateReturn());
+                  if ((d2.after(d1)) && (task[jr].markAsDoneReturn().equals("not done"))) {
+                    pendingTasks[pr] = task[jr];
+                    pr++;
+                  }
+                }
+              } catch (ParseException e) {
+                e.printStackTrace();
+              }
+              return pendingTasks;
+            }
+          /**
+          * removing a task from task list.
+          */  
+            public void removeTask(Task tobj) {
+              for (int j = 0; j < count; j++) {
+                if (task[j] == tobj) {
+                  int kr = j;
+                  while (kr < count - 1) { 
+                    task[kr] = task[kr + 1];
+                    kr ++;
+                  }
+                  count--;
+                }
+              }
+            }
+          }
+         </code>
+      </pre>
+   </body>
+   <script type="text/javascript">
+      var all_lines = $("code").text().split("\n");
+      var code = "";
+
+      //iterates through each line
+      $.each(all_lines, function(i, line) {
+         code = code+'<span style="float:left"id="'+i+'">'+line+'</span>&nbsp;&nbsp;<span style="background-color:white; border-radius:5px; color:red;" id="err'+i+'"></span><br>';
+         var error = "";
+
+         //Event handler for triple click
+         window.addEventListener('click', function (clicks) {
+            if (clicks.detail === 3) {
+               if (window.getSelection() == line){
+
+                  //Highlighting the line and showing prompt window
+                  error = prompt("Line No : "+i, error);
+                  if(error != null && error != "null" && error != ""){
+                    $("#"+i).addClass("error");
+                    $("#err"+i).html('&nbsp;&nbsp;'+error+'&nbsp;&nbsp;');
+                  }
+                  else{
+                    $("#"+i).removeClass("error");
+                    $("#err"+i).html("");
+                  }
+               }
+            }
+         });
+      });
+      $("code").html(code);
+   </script>
+</html>
